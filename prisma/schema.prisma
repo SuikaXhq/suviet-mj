@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  password   String
+  salt       String
+  status     UserStatus   @default(ACTIVE)
+  level      UserLevel    @default(normal)
+  GameRecord GameRecord[]
+  Competitor Competitor[]
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum UserLevel {
+  normal
+  admin
+}
+
+model Game {
+  id            Int          @id @default(autoincrement())
+  time          DateTime     @default(now())
+  isValid       Boolean      @default(true)
+  type          GameType
+  GameRecord    GameRecord[]
+  competition   Competition? @relation(fields: [competitionId], references: [id])
+  competitionId Int?
+}
+
+enum GameType {
+  ES4 // 四人半庄
+  ES3 // 三人半庄
+  E4 // 四人东风
+  E3 // 三人东风
+  GB // 国标
+}
+
+model GameRecord {
+  game                   Game                    @relation(fields: [gameId], references: [id])
+  gameId                 Int
+  player                 User                    @relation(fields: [playerId], references: [id])
+  playerId               Int
+  score                  Int
+  rank                   Int
+  positionOnStart        Position
+  CompetitionScoreRecord CompetitionScoreRecord?
+
+  @@unique([gameId, playerId])
+}
+
+enum Position {
+  EAST
+  SOUTH
+  WEST
+  NORTH
+  NULL
+}
+
+model Competition {
+  id         Int             @id @default(autoincrement())
+  name       String
+  type       CompetitionType
+  schedule   Int
+  time       DateTime        @default(now())
+  isValid    Boolean         @default(true)
+  Competitor Competitor[]
+  Game       Game[]
+}
+
+enum CompetitionType {
+  FourInFour // 四人四局
+  FiveInFive // 五人五局
+}
+
+model CompetitionScoreRecord {
+  gameRecord GameRecord @relation(fields: [gameId, playerId], references: [gameId, playerId])
+  playerId   Int
+  gameId     Int
+  points     Int
+
+  @@unique([gameId, playerId])
+}
+
+model Competitor {
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  competitionId Int
+  player        User        @relation(fields: [playerId], references: [id])
+  playerId      Int
+  competitorId  Int
+
+  @@unique([competitionId, playerId])
+  @@unique([competitionId, competitorId])
+}
