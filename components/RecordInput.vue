@@ -29,20 +29,20 @@ function startSwapPlayer(event: DragEvent, player: string | undefined) {
 </script>
 
 <template>
-    <div class="flex flex-row gap-2 p-2 h-32 w-fit items-center justify-center bg-gray-100 rounded-lg shadow-md"
+    <div class="flex flex-row gap-2 p-2 items-center justify-center bg-gray-100 rounded-lg shadow-md"
         @dragover.prevent @dragenter.prevent @drop="onPlayerDrop">
-        <div class="w-12 text-4xl font-bold text-center">{{ wind }}</div>
-        <div class="flex flex-col gap-2 items-center">
-            <div class="bg-gray-200 rounded-lg flex flex-row items-center justify-center" :draggable="canDrag"
+        <div class="sm:w-12 w-8 sm:text-4xl text-2xl font-bold text-center">{{ wind }}</div>
+        <div class="flex flex-col sm:gap-2 gap-1 items-center">
+            <div class="bg-gray-200 rounded-lg flex flex-row items-center justify-center overflow-hidden" :draggable="canDrag"
                 @dragstart="startSwapPlayer($event, userName)" @dragend="canDrag = false">
                 <Icon name="stash:burger-classic" size="1.5em" mode="svg" class="cursor-grab"
                     @mousedown="canDrag = true" />
                 <input v-model="userName" type="text" placeholder="玩家名" required
-                    class="w-36 h-10 text-2xl text-center bg-gray-200 text-gray-600" />
+                    class="sm:w-36 w-24 sm:h-10 h-8 sm:text-2xl text-base text-center bg-gray-200 text-gray-600" />
             </div>
-            <div class="text-3xl">
+            <div class="sm:text-3xl text-xl">
                 <input v-model="score" type="number" placeholder="点数" required
-                    class="w-28 h-16 text-4xl text-right border-gray-200 border-2 rounded-lg" />00
+                    class="sm:w-28 sm:h-16 w-20 h-8 sm:text-4xl text-xl text-right border-gray-200 border-2 rounded-lg" />00
             </div>
         </div>
     </div>

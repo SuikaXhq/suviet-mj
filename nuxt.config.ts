@@ -17,4 +17,12 @@ export default defineNuxtConfig({
     runtimeConfig: {
         registerToken: process.env.REGISTER_TOKEN,
     },
+    vite: {
+        resolve: {
+            alias: {
+                ".prisma/client/index-browser":
+                    "./node_modules/.prisma/client/index-browser.js",
+            },
+        },
+    },
 });

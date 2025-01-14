@@ -137,14 +137,14 @@ const rankOfCompetition = computed(() => {
     <BasePage hasParent>
         <template v-slot:header>
             <div class="flex h-full items-center justify-center">
-                <div class="text-center font-bold text-4xl">{{ data?.body?.name }}</div>
+                <div class="text-center font-bold sm:text-4xl">{{ data?.body?.name }}</div>
             </div>
         </template>
 
         <template v-slot:body>
-            <div class="flex flex-col items-center justify-center w-full divide-y-[1px]">
-                <div v-if="rankOfCompetition.length > 0" class="p-8 flex flex-col items-center gap-4">
-                    <div class="flex flex-row items-center bg-gray-200 rounded-lg overflow-hidden p-8 text-3xl gap-x-8">
+            <div class="flex flex-col items-center justify-center w-full divide-y-[1px] p-2">
+                <div v-if="rankOfCompetition.length > 0" class="sm:p-8 p-4 flex flex-col items-center gap-4">
+                    <div class="flex flex-row items-center bg-gray-200 rounded-lg overflow-hidden sm:p-8 p-4 sm:text-3xl text-xl sm:gap-x-8 gap-x-4">
                         <div class="flex flex-col gap-4 items-center">
                             <div class="font-bold">名次</div>
                             <div v-for="(item, index) in rankOfCompetition" :key="index"
@@ -160,20 +160,20 @@ const rankOfCompetition = computed(() => {
                             <div class="font-bold">得点</div>
                             <div v-for="(item, index) in rankOfCompetition" :key="index" :class="Math.abs(item.point
                                 - 0) < 1e-3 ? `` : (item.point > 0 ? `text-red-700` : `text-green-700`)">{{
-                                    Math.abs(item.point
-                                        - 0) < 1e-3 ? '±' : (item.point > 0 ? '＋' : '▲') }}{{
+                                        Math.abs(item.point
+                                            - 0) < 1e-3 ? '±' : (item.point > 0 ? '＋' : '▲') }}{{
                                     Math.abs(item.point / 10).toFixed(1) }}</div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="w-full flex flex-col gap-4 items-center pb-8">
-                <div class="text-red-700 text-xl">{{ errorInfo }}</div>
-                <template v-for="(item, index) in recordsWithForms" :key="index">
-                    <Record v-if="item.hasRecord" v-bind="item.record!" />
-                    <CompetitionRecordInput v-else-if="currentUser.level === UserLevel.admin"
-                        :players="item.playerOrder!.slice(0, 4)" @submit="submitRecord" />
-                </template>
+                <div class="w-full flex flex-col gap-4 items-center pb-8">
+                    <div class="text-red-700 text-xl">{{ errorInfo }}</div>
+                    <template v-for="(item, index) in recordsWithForms" :key="index">
+                        <Record v-if="item.hasRecord" v-bind="item.record!" />
+                        <CompetitionRecordInput v-else-if="currentUser.level === UserLevel.admin"
+                            :players="item.playerOrder!.slice(0, 4)" @submit="submitRecord" />
+                    </template>
+                </div>
             </div>
         </template>
     </BasePage>

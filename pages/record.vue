@@ -13,17 +13,17 @@ const historyRecords = computed(() => {
     <BasePage hasParent>
         <template v-slot:header>
             <div class="flex h-full items-center justify-center">
-                <div class="text-center font-bold text-4xl">对局记录</div>
+                <div class="text-center font-bold xl:text-4xl text-2xl">对局记录</div>
             </div>
         </template>
 
         <template v-slot:body>
-            <div class="flex flex-col gap-4 p-4 divide-y-[1px] items-center">
+            <div class="flex flex-col sm:gap-4 gap-2 sm:p-4 p-2 divide-y-[1px] items-center">
                 <TransitionGroup name="record">
                     <RecordInputPanel key="recordPanel" canFold @uploaded="refreshHistoryRecords" />
                     <div class="flex flex-col w-full " key="historyPanel">
-                        <div class="block w-full m-4 font-bold text-3xl text-gray-600">历史对局</div>
-                        <div class="flex flex-col w-full gap-6 items-center">
+                        <div class="block w-full sm:m-4 m-2 font-bold sm:text-3xl text-2xl text-gray-600 text-center sm:text-left">历史对局</div>
+                        <div class="flex flex-col w-full sm:gap-6 gap-2 items-center">
                             <Record v-for="record in historyRecords" :key="record.id" v-bind="record" />
                         </div>
                     </div>

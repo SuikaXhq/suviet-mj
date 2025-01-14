@@ -140,7 +140,7 @@ function swapPlayer(player: string) {
     <form v-else class="flex flex-col w-full gap-2 items-center relative mb-4" key="newPanel"
         @submit.prevent="submitRecord()">
         <div class="w-full flex flex-row items-center justify-center">
-            <div class="font-bold text-3xl text-center m-2">对局类型：</div>
+            <div class="font-bold sm:text-3xl text-base text-center m-2">对局类型：</div>
             <div>
                 <ToggleGroup v-model="chosenGameTypeIndex" :options="gameTypeNames" />
             </div>
@@ -150,13 +150,13 @@ function swapPlayer(player: string) {
             <UserButton v-for="user in userListUI" :key="user.id" :user="user" :draggable="true"
                 @dragstart="startDragPlayer($event, user)" />
         </TransitionGroup>
-        <div class="grid grid-cols-2 gap-x-32 gap-y-2 items-center justify-center justify-items-center">
+        <div class="grid grid-cols-2 sm:gap-x-32 gap-x-2 gap-y-2 items-center justify-center justify-items-center">
             <RecordInput v-for="(wind, index) in inputWindList" :wind="nameMap[wind]"
                 v-model:userName="recordInputs.players[index]" v-model:score="recordInputs.scores[index]"
                 :class="index === 0 || index === 3 ? `col-span-2` : ``" @playerDragged="readyForSwapPlayer(index)"
                 @playerDropped="swapPlayer" @update="clearError" />
         </div>
-        <button type="submit" class="h-16 w-80 rounded-2xl">
+        <button type="submit" class="h-16 w-80 rounded-2xl sm:mt-2 mt-8">
             <BaseButton class="h-16 w-80 p-4 flex items-center justify-center">
                 <Icon name="stash:check-solid" size="2em" mode="svg" />
             </BaseButton>
@@ -164,7 +164,7 @@ function swapPlayer(player: string) {
         <div class="text-center text-xl" :class="isSubmitError ? `text-red-700 ` : `text-green-500`">{{
             errorInfo }}</div>
         <Icon v-if="canFold" name="stash:chevron-up-duotone" size="2em" mode="svg" @click="newButtonClicked = false"
-            class="absolute text-gray-300 cursor-pointer hover:text-gray-600 transition bottom-[-40px]" />
+            class="absolute text-gray-300 cursor-pointer hover:text-gray-600 transition sm:bottom-[-40px] bottom-[-30px]" />
     </form>
 </template>
 
