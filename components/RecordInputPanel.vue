@@ -28,7 +28,10 @@ async function fetchUserList() {
 }
 fetchUserList();
 
+const isSubmitting = ref(false);
 async function submitRecord() {
+    if (isSubmitting.value) return;
+    isSubmitting.value = true;
     const { data } = await useFetch('/api/record', {
         method: 'POST',
         body: {
@@ -49,6 +52,7 @@ async function submitRecord() {
         isSubmitError.value = true;
         errorInfo.value = data.value?.message || '记录上传失败';
     }
+    isSubmitting.value = false;
 }
 
 const isSubmitError = ref(false);
@@ -156,9 +160,10 @@ function swapPlayer(player: string) {
                 :class="index === 0 || index === 3 ? `col-span-2` : ``" @playerDragged="readyForSwapPlayer(index)"
                 @playerDropped="swapPlayer" @update="clearError" />
         </div>
-        <button type="submit" class="h-16 w-80 rounded-2xl sm:mt-2 mt-8">
-            <BaseButton class="h-16 w-80 p-4 flex items-center justify-center">
-                <Icon name="stash:check-solid" size="2em" mode="svg" />
+        <button type="submit" class="h-16 w-80 rounded-2xl sm:mt-2 mt-8" :disabled="isSubmitting">
+            <BaseButton class="h-16 w-80 p-4 flex items-center justify-center" :disabled="isSubmitting">
+                <Icon v-if="!isSubmitting" name="stash:check-solid" size="2em" mode="svg" />
+                <Icon v-else name="svg-spinners:180-ring-with-bg" size="2em" mode="svg" class="animate-spin" />
             </BaseButton>
         </button>
         <div class="text-center text-xl" :class="isSubmitError ? `text-red-700 ` : `text-green-500`">{{

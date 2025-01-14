@@ -16,9 +16,8 @@ const competitions = ref(data.value?.body || []);
 
         <template v-slot:body>
             <div class="flex flex-col items-center justify-center divide-y-[1px]">
-                <TransitionGroup v-if="user.level === UserLevel.admin" name="competition">
-                    <CompetitionInputPanel canFold @submitted="(id) => navigateTo(`/competition/${id}`)" />
-                </TransitionGroup>
+                <CompetitionInputPanel v-if="user.level === UserLevel.admin" canFold
+                    @submitted="(id) => navigateTo(`/competition/${id}`)" />
 
                 <div class="w-full flex flex-col justify-center items-center xl:gap-8 gap-4 xl:p-8 p-4">
                     <NuxtLink v-for="competition in competitions" :key="competition.id"
@@ -39,23 +38,3 @@ const competitions = ref(data.value?.body || []);
         </template>
     </BasePage>
 </template>
-
-<style>
-.competition-move {
-    transition: transform 0.3s;
-}
-
-.competition-leave-active,
-.competition-enter-active {
-    transition: opacity 0.3s ease;
-}
-
-.competition-enter-from,
-.competition-leave-to {
-    opacity: 0;
-}
-
-.competition-leave-active {
-    position: absolute;
-}
-</style>

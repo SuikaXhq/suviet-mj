@@ -28,6 +28,9 @@ export default defineEventHandler(async (event) => {
                 orderBy: {
                     time: "desc",
                 },
+                where: {
+                    isValid: true,
+                },
                 include: {
                     GameRecord: {
                         include: {

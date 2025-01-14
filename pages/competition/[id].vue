@@ -35,7 +35,10 @@ const records = computed(() => {
     }
 })
 
+const isSubmitting = ref(false);
 async function submitRecord(players: string[], scores: number[], points: number[]) {
+    if (isSubmitting.value) return;
+    isSubmitting.value = true;
     const data = await $fetch("/api/record", {
         method: "POST",
         body: {
@@ -53,6 +56,7 @@ async function submitRecord(players: string[], scores: number[], points: number[
     } else {
         errorInfo.value = data.message || "记录上传失败";
     }
+    isSubmitting.value = false;
 }
 
 const recordsWithForms = computed(() => {
@@ -144,7 +148,8 @@ const rankOfCompetition = computed(() => {
         <template v-slot:body>
             <div class="flex flex-col items-center justify-center w-full divide-y-[1px] p-2">
                 <div v-if="rankOfCompetition.length > 0" class="sm:p-8 p-4 flex flex-col items-center gap-4">
-                    <div class="flex flex-row items-center bg-gray-200 rounded-lg overflow-hidden sm:p-8 p-4 sm:text-3xl text-xl sm:gap-x-8 gap-x-4">
+                    <div
+                        class="flex flex-row items-center bg-gray-200 rounded-lg overflow-hidden sm:p-8 p-4 sm:text-3xl text-xl sm:gap-x-8 gap-x-4">
                         <div class="flex flex-col gap-4 items-center">
                             <div class="font-bold">名次</div>
                             <div v-for="(item, index) in rankOfCompetition" :key="index"
@@ -160,8 +165,8 @@ const rankOfCompetition = computed(() => {
                             <div class="font-bold">得点</div>
                             <div v-for="(item, index) in rankOfCompetition" :key="index" :class="Math.abs(item.point
                                 - 0) < 1e-3 ? `` : (item.point > 0 ? `text-red-700` : `text-green-700`)">{{
-                                        Math.abs(item.point
-                                            - 0) < 1e-3 ? '±' : (item.point > 0 ? '＋' : '▲') }}{{
+                                    Math.abs(item.point
+                                        - 0) < 1e-3 ? '±' : (item.point > 0 ? '＋' : '▲') }}{{
                                     Math.abs(item.point / 10).toFixed(1) }}</div>
                         </div>
                     </div>
@@ -171,7 +176,7 @@ const rankOfCompetition = computed(() => {
                     <template v-for="(item, index) in recordsWithForms" :key="index">
                         <Record v-if="item.hasRecord" v-bind="item.record!" />
                         <CompetitionRecordInput v-else-if="currentUser.level === UserLevel.admin"
-                            :players="item.playerOrder!.slice(0, 4)" @submit="submitRecord" />
+                            :players="item.playerOrder!.slice(0, 4)" @submit="submitRecord" :isSubmitting />
                     </template>
                 </div>
             </div>

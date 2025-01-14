@@ -1,3 +1,4 @@
+import { UserStatus } from "@prisma/client";
 import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
@@ -15,6 +16,9 @@ export default defineEventHandler(async (event) => {
             id: true,
             name: true,
             level: true,
+        },
+        where: {
+            status: UserStatus.ACTIVE,
         },
     });
 

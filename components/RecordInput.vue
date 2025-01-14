@@ -38,7 +38,7 @@ function startSwapPlayer(event: DragEvent, player: string | undefined) {
                 <Icon name="stash:burger-classic" size="1.5em" mode="svg" class="cursor-grab"
                     @mousedown="canDrag = true" />
                 <input v-model="userName" type="text" placeholder="玩家名" required
-                    class="sm:w-36 w-24 sm:h-10 h-8 sm:text-2xl text-base text-center bg-gray-200 text-gray-600" />
+                    class="sm:w-36 w-24 sm:h-10 h-8 sm:text-2xl rounded-lg text-base text-center bg-gray-200 text-gray-600" />
             </div>
             <div class="sm:text-3xl text-xl">
                 <input v-model="score" type="number" placeholder="点数" required
