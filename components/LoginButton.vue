@@ -62,7 +62,7 @@ async function register() {
     if (res.statusCode === 200) {
         login();
     } else {
-        errorInfo.value = res.message;
+        errorInfo.value = res.message || '注册失败';
     }
 
 }
@@ -79,35 +79,36 @@ async function login() {
     if (res.statusCode === 200) {
         fetchUserSession();
     } else {
-        errorInfo.value = res.message;
+        errorInfo.value = res.message || '登录失败';
     }
 }
 </script>
 
 <template>
-    <div class="rounded-2xl bg-gray-200 xl:h-96 xl:w-96 sm:h-72 sm:w-72 h-40 w-40">
+    <div class="rounded-2xl xl:h-96 xl:w-96 h-72 w-72 bg-gray-200">
         <Transition name="fade" mode="out-in">
             <BaseIndexButton v-if="!loggedIn && !clicked" @click="clicked = true">
-                    登录/注册
+                登录/注册
             </BaseIndexButton>
 
-            <form v-else-if="!loggedIn" class="rounded-2xl xl:h-96 xl:w-96 sm:h-72 sm:w-72 h-40 w-40 bg-gray-200 " @submit.prevent="loginInfo.isRegister ? register() : login()">
+            <form v-else-if="!loggedIn" class="h-full w-full"
+                @submit.prevent="loginInfo.isRegister ? register() : login()">
                 <TransitionGroup name="login" tag="div"
-                    class="sm:p-8 p-4 h-full justify-center justify-items-center place-items-center flex flex-col xl:text-2xl sm:text-xl text-sm sm:gap-2 gap-1 relative">
+                    class="p-8 h-full justify-center justify-items-center place-items-center flex flex-col xl:text-2xl text-xl gap-2 relative">
                     <input v-model="loginInfo.username" type="text" :placeholder="namePlaceholder" required key="name"
                         @input="clearError"
-                        class="sm:px-4 px-1 sm:rounded-lg rounded-md xl:h-12 xl:w-80 sm:h-8 h-4 sm:w-56 w-32 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
+                        class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
                     <input v-model="loginInfo.password" type="password" :placeholder="pwdPlaceholder" required key="pwd"
                         @update="clearError"
-                        class="sm:px-4 px-1 sm:rounded-lg rounded-md xl:h-12 xl:w-80 sm:h-8 h-4 sm:w-56 w-32 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
+                        class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
                     <input v-if="loginInfo.isRegister" v-model="loginInfo.passwordConfirm" type="password"
                         key="pwdConfirm" placeholder="确认密码" required @update="clearError"
-                        class="sm:px-4 px-1 sm:rounded-lg rounded-md xl:h-12 xl:w-80 sm:h-8 h-4 sm:w-56 w-32 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
+                        class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
                     <input v-if="loginInfo.isRegister" v-model="loginInfo.token" type="text" placeholder="注册Token"
                         key="token" @update="clearError" required
-                        class="sm:px-4 px-1 sm:rounded-lg rounded-md xl:h-12 xl:w-80 sm:h-8 h-4 sm:w-56 w-32 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
+                        class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
                     <button type="submit" key="submit"
-                        class="rounded-xl xl:h-12 sm:h-8 xl:w-80 sm:w-56 w-32 block text-gray-700 bg-white hover:scale-[1.02] active:scale-[0.98] shadow-md transition duration-200">{{
+                        class="rounded-xl xl:h-12 h-8 xl:w-80 w-56 block text-gray-700 bg-white hover:scale-[1.02] active:scale-[0.98] shadow-md transition duration-200">{{
                             loginInfo.isRegister ? `注册` : `登录` }}</button>
                     <div class="text-red-700 text-left text-base" key="error">{{ errorInfo }}</div>
                     <div class="w-full flex justify-center text-gray-500" key="switch">

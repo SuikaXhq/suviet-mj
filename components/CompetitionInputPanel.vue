@@ -109,13 +109,13 @@ function handleRemoveFromCompetitor(player: string) {
     <form v-else class="flex flex-col w-full gap-2 items-center relative m-4" key="newPanel"
         @submit.prevent="submitCompetition()">
         <div class="w-full flex flex-row items-center justify-center">
-            <div class="font-bold text-3xl text-center m-2">大赛名：
+            <div class="font-bold sm:text-3xl text-xl text-center m-2">大赛名：
                 <input v-model="competitionConfigInputs.name" type="text" required
-                    class="rounded-xl w-3/5 h-16 text-2xl text-center border-2 text-gray-800" />
+                    class="rounded-xl w-3/5 h-16 sm:text-2xl text-base text-center border-2 text-gray-800" />
             </div>
         </div>
         <div class="w-full flex flex-row items-center justify-center">
-            <div class="font-bold text-3xl text-center m-2">大赛类型：</div>
+            <div class="font-bold sm:text-3xl text-xl text-center m-2">大赛类型：</div>
             <div>
                 <ToggleGroup v-model="chosenCompetitionTypeIndex" :options="competitionTypeNames" />
             </div>
@@ -124,13 +124,14 @@ function handleRemoveFromCompetitor(player: string) {
             @drop.prevent @dragover.prevent
             @drop="handleRemoveFromCompetitor($event.dataTransfer?.getData('player') || '')">
             <UserButton v-for="user in userListUI" :key="user.id" :user="user" :draggable="true"
-                @dragstart="startDragPlayer($event, user.name)" @click="handleAddToCompetitor(user.name)" />
+                @dragstart="startDragPlayer($event, user.name)" @click="handleAddToCompetitor(user.name)"
+                @touchmove.prevent />
         </TransitionGroup>
         <div class="flex flex-row items-center justify-center w-full">
-            <div class="font-bold text-3xl text-center m-2">
+            <div class="font-bold sm:text-3xl text-xl text-center m-2">
                 参赛玩家：
             </div>
-            <div class="rounded-xl border-2 w-3/5 h-16 gap-2 p-2 flex flex-row justify-center items-center"
+            <div class="rounded-xl border-2 w-3/5 min-h-16 max-h-80 gap-2 p-2 flex flex-row flex-wrap justify-center items-center"
                 @drop.prevent @dragover.prevent
                 @drop="handleAddToCompetitor($event.dataTransfer?.getData('player') || '')">
                 <UserButton v-for="player in competitors" :key="player"

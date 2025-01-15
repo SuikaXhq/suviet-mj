@@ -119,10 +119,20 @@ const recordInputsSubmit = computed(() => { // 转换为东南西北
     }
 });
 
+const windowWidth = ref(0);
+const isIpad = computed(() => {
+    return windowWidth.value < 1280 && windowWidth.value > 640;
+});
+const panelOrderResponsiveToWidth = computed(() => {
+    return windowWidth.value < 1280 && windowWidth.value > 640 ? [0, 1, 3, 2] : [0, 1, 2, 3]; // Ipad上东南西北，其余东南北西
+});
+
+const draggingPlayer = ref(false);
 function startDragPlayer(event: DragEvent, item: (typeof userList)[number]) {
     event.dataTransfer!.dropEffect = 'move';
     event.dataTransfer!.effectAllowed = 'move';
     event.dataTransfer!.setData('player', item.name);
+    draggingPlayer.value = true;
 }
 
 const indexToSwapPlayer = ref<number>(-1)
@@ -130,10 +140,36 @@ function readyForSwapPlayer(index: number) {
     indexToSwapPlayer.value = index;
 }
 function swapPlayer(player: string) {
+    draggingPlayer.value = false;
     if (indexToSwapPlayer.value === -1) return;
     recordInputs.players[indexToSwapPlayer.value] = player;
     indexToSwapPlayer.value = -1;
 }
+
+const isMovingOrSwapping = computed(() => {
+    return indexToSwapPlayer.value !== -1 || playerCache.value !== undefined || draggingPlayer.value;
+})
+const playerCache = ref<string | undefined>(undefined);
+function handleCachePlayer(player: string) {
+    if (playerCache.value === player) {
+        playerCache.value = undefined;
+    } else {
+        playerCache.value = player;
+    }
+}
+function handleSetPlayer(index: number) {
+    if (playerCache.value) {
+        recordInputs.players[index] = playerCache.value;
+        playerCache.value = undefined;
+    }
+}
+
+onMounted(() => {
+    windowWidth.value = window.innerWidth;
+    window.addEventListener('resize', () => {
+        windowWidth.value = window.innerWidth;
+    });
+});
 </script>
 
 <template>
@@ -152,13 +188,20 @@ function swapPlayer(player: string) {
         <TransitionGroup name="record-users" tag="div"
             class="flex flex-row flex-wrap gap-2 items-center justify-center">
             <UserButton v-for="user in userListUI" :key="user.id" :user="user" :draggable="true"
-                @dragstart="startDragPlayer($event, user)" />
+                :class="playerCache === user.name ? `border-blue-500 border-2` : ``"
+                @dragstart="startDragPlayer($event, user)" @dragend="draggingPlayer = false"
+                @click="handleCachePlayer(user.name)" />
         </TransitionGroup>
-        <div class="grid grid-cols-2 sm:gap-x-32 gap-x-2 gap-y-2 items-center justify-center justify-items-center">
-            <RecordInput v-for="(wind, index) in inputWindList" :wind="nameMap[wind]"
+        <div
+            class="grid grid-cols-2 sm:max-xl:flex sm:max-xl:flex-row gap-x-2 xl:gap-x-32 gap-y-2 items-center justify-center justify-items-center">
+            <RecordInput v-for="index in panelOrderResponsiveToWidth" :wind="nameMap[inputWindList[index]]" :key="index"
                 v-model:userName="recordInputs.players[index]" v-model:score="recordInputs.scores[index]"
-                :class="index === 0 || index === 3 ? `col-span-2` : ``" @playerDragged="readyForSwapPlayer(index)"
-                @playerDropped="swapPlayer" @update="clearError" />
+                class="transition duration-150" :class="{
+                    'col-span-2': (index === 0 || index === 3) && !isIpad,
+                    'border-2 border-orange-300 hover:scale-[1.02] group cursor-pointer': isMovingOrSwapping && indexToSwapPlayer !== index,
+                    'border-2 border-blue-500': indexToSwapPlayer === index,
+                }" @playerDragged="readyForSwapPlayer(index)" @playerDropped="swapPlayer" @update="clearError"
+                @click="handleSetPlayer(index)" />
         </div>
         <button type="submit" class="h-16 w-80 rounded-2xl sm:mt-2 mt-8" :disabled="isSubmitting">
             <BaseButton class="h-16 w-80 p-4 flex items-center justify-center" :disabled="isSubmitting">

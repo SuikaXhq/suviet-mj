@@ -5,15 +5,7 @@ const props = defineProps<{
 
 const buttonStyle = computed(() => {
     return [
-        "rounded-2xl",
-        "shadow-lg",
-        "transition",
-        "duration-300",
-        "bg-gray-200",
-        "dark:bg-slate-600",
-        "hover:bg-gray-300",
-        "hover:dark:border-gray-400",
-        "font-bold",
+        "rounded-2xl shadow-lg transition duration-300 bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 hover:dark:border-gray-400 font-bold",
         {
             "cursor-not-allowed": props.disabled,
             "cursor-pointer": !props.disabled,

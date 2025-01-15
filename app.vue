@@ -2,7 +2,7 @@
     <div>
         <div class="bg-gray-50 dark:bg-zinc-900">
             <div
-                class="relative mx-auto flex min-h-screen max-w-5xl flex-col bg-white text-textMain shadow-lg dark:bg-slate-800 dark:text-textMainDark">
+                class="relative mx-auto flex min-h-screen w-full xl:max-w-5xl flex-col bg-white text-textMain shadow-lg dark:bg-slate-800 dark:text-textMainDark">
                 <NuxtPage />
             </div>
         </div>

@@ -10,7 +10,7 @@ const historyRecords = computed(() => {
 </script>
 
 <template>
-    <BasePage hasParent>
+    <BasePage hasParent class="overflow-hidden">
         <template v-slot:header>
             <div class="flex h-full items-center justify-center">
                 <div class="text-center font-bold xl:text-4xl text-2xl">对局记录</div>
