@@ -2,13 +2,16 @@
 
 基于Nuxt的麻雀小助手。
 
+## Dependencies
+
+- Node >= 22
+
 ## Setup
 
 Make sure to install dependencies:
 
 ```bash
-# pnpm
-pnpm install
+npm install
 ```
 
 ## Development Server
@@ -16,8 +19,7 @@ pnpm install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-# pnpm
-pnpm dev
+npm run dev
 ```
 
 ## Production
@@ -25,13 +27,26 @@ pnpm dev
 Build the application for production:
 
 ```bash
-# pnpm
-pnpm build
+npm run build
+```
+
+Run migration of prisma:
+
+```bash
+export DATABASE_URL="file:${PWD}/prisma/prod.db"
+npx prisma migrate deploy
 ```
 
 Locally preview production build:
 
 ```bash
-# pnpm
-pnpm preview
+node .output/server/index.mjs
+```
+
+Deploy with PM2:
+```bash
+NUXT_SESSION_PASSWORD={your password}
+NUXT_REGISTER_TOKEN={your token}
+DATABASE_URL="file:${PWD}/prisma/prod.db"
+pm2 start ecosystem.config.cjs
 ```
