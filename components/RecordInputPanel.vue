@@ -124,6 +124,9 @@ const isIpad = computed(() => {
     return windowWidth.value < 1280 && windowWidth.value > 640;
 });
 const panelOrderResponsiveToWidth = computed(() => {
+    if (chosenGameType.value === GameType.ES3 || chosenGameType.value === GameType.E3) {
+        return [0, 1, 2];
+    }
     return windowWidth.value < 1280 && windowWidth.value > 640 ? [0, 1, 3, 2] : [0, 1, 2, 3]; // Ipad上东南西北，其余东南北西
 });
 
