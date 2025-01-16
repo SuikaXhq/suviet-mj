@@ -85,48 +85,46 @@ async function login() {
 </script>
 
 <template>
-    <div class="rounded-2xl xl:h-96 xl:w-96 h-72 w-72 bg-gray-200">
-        <Transition name="fade" mode="out-in">
-            <BaseIndexButton v-if="!loggedIn && !clicked" @click="clicked = true">
-                登录/注册
-            </BaseIndexButton>
+    <Transition name="fade" mode="out-in">
+        <BaseIndexButton v-if="!loggedIn && !clicked" @click="clicked = true">
+            登录/注册
+        </BaseIndexButton>
 
-            <form v-else-if="!loggedIn" class="h-full w-full"
-                @submit.prevent="loginInfo.isRegister ? register() : login()">
-                <TransitionGroup name="login" tag="div"
-                    class="p-8 h-full justify-center justify-items-center place-items-center flex flex-col xl:text-2xl text-xl gap-2 relative">
-                    <input v-model="loginInfo.username" type="text" :placeholder="namePlaceholder" required key="name"
-                        @input="clearError"
-                        class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
-                    <input v-model="loginInfo.password" type="password" :placeholder="pwdPlaceholder" required key="pwd"
-                        @update="clearError"
-                        class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
-                    <input v-if="loginInfo.isRegister" v-model="loginInfo.passwordConfirm" type="password"
-                        key="pwdConfirm" placeholder="确认密码" required @update="clearError"
-                        class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
-                    <input v-if="loginInfo.isRegister" v-model="loginInfo.token" type="text" placeholder="注册Token"
-                        key="token" @update="clearError" required
-                        class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
-                    <button type="submit" key="submit"
-                        class="rounded-xl xl:h-12 h-8 xl:w-80 w-56 block text-gray-700 bg-white hover:scale-[1.02] active:scale-[0.98] shadow-md transition duration-200">{{
-                            loginInfo.isRegister ? `注册` : `登录` }}</button>
-                    <div class="text-red-700 text-left text-base" key="error">{{ errorInfo }}</div>
-                    <div class="w-full flex justify-center text-gray-500" key="switch">
-                        或
-                        <button @click="loginInfo.isRegister = !loginInfo.isRegister; clearError();" type="button"
-                            class="text-blue-600 hover:text-blue-400 active:text-blue-800 transition duration-100 sm:ml-4 ml-2">{{
-                                loginInfo.isRegister ? `登录` : `注册` }}</button>
-                    </div>
-                </TransitionGroup>
-            </form>
-            <div v-else
-                class="sm:p-8 p-4 h-full sm:text-3xl text-xl text-gray-700 font-bold flex flex-col justify-center items-center sm:gap-8 gap-4">
-                <div class="text-center">欢迎 {{ user!.level === UserLevel.admin ? `管理员` : `用户` }} {{ user!.name }}</div>
-                <button @click="clear"
-                    class="sm:text-2xl text-base font-normal text-red-700 hover:text-red-800 active:text-red-900 transition duration-150">退出登录</button>
-            </div>
-        </Transition>
-    </div>
+        <form v-else-if="!loggedIn" class="rounded-2xl xl:h-96 xl:w-96 h-72 w-72 bg-gray-200"
+            @submit.prevent="loginInfo.isRegister ? register() : login()">
+            <TransitionGroup name="login" tag="div"
+                class="p-8 h-full justify-center justify-items-center place-items-center flex flex-col xl:text-2xl text-xl gap-2 relative">
+                <input v-model="loginInfo.username" type="text" :placeholder="namePlaceholder" required key="name"
+                    @input="clearError"
+                    class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
+                <input v-model="loginInfo.password" type="password" :placeholder="pwdPlaceholder" required key="pwd"
+                    @update="clearError"
+                    class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
+                <input v-if="loginInfo.isRegister" v-model="loginInfo.passwordConfirm" type="password" key="pwdConfirm"
+                    placeholder="确认密码" required @update="clearError"
+                    class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
+                <input v-if="loginInfo.isRegister" v-model="loginInfo.token" type="text" placeholder="注册Token"
+                    key="token" @update="clearError" required
+                    class="px-4 rounded-lg xl:h-12 xl:w-80 h-8 w-56 block text-gray-900 outline outline-1 outline-gray-400 focus:outline focus:outline-2 focus:outline-gray-500" />
+                <button type="submit" key="submit"
+                    class="rounded-xl xl:h-12 h-8 xl:w-80 w-56 block text-gray-700 bg-white hover:scale-[1.02] active:scale-[0.98] shadow-md transition duration-200">{{
+                        loginInfo.isRegister ? `注册` : `登录` }}</button>
+                <div class="text-red-700 text-left text-base" key="error">{{ errorInfo }}</div>
+                <div class="w-full flex justify-center text-gray-500" key="switch">
+                    或
+                    <button @click="loginInfo.isRegister = !loginInfo.isRegister; clearError();" type="button"
+                        class="text-blue-600 hover:text-blue-400 active:text-blue-800 transition duration-100 sm:ml-4 ml-2">{{
+                            loginInfo.isRegister ? `登录` : `注册` }}</button>
+                </div>
+            </TransitionGroup>
+        </form>
+        <div v-else
+            class="rounded-2xl xl:h-96 xl:w-96 h-72 w-72 bg-gray-200 sm:p-8 p-4 h-full sm:text-3xl text-xl text-gray-700 font-bold flex flex-col justify-center items-center sm:gap-8 gap-4">
+            <div class="text-center">欢迎 {{ user!.level === UserLevel.admin ? `管理员` : `用户` }} {{ user!.name }}</div>
+            <button @click="clear"
+                class="sm:text-2xl text-base font-normal text-red-700 hover:text-red-800 active:text-red-900 transition duration-150">退出登录</button>
+        </div>
+    </Transition>
 </template>
 
 <style>

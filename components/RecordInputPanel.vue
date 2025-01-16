@@ -140,7 +140,9 @@ function startDragPlayer(event: DragEvent, item: (typeof userList)[number]) {
 
 const indexToSwapPlayer = ref<number>(-1)
 function readyForSwapPlayer(index: number) {
-    indexToSwapPlayer.value = index;
+    setTimeout(() => {
+        indexToSwapPlayer.value = index;
+    }, 100)
 }
 function swapPlayer(player: string) {
     draggingPlayer.value = false;
@@ -164,6 +166,11 @@ function handleSetPlayer(index: number) {
     if (playerCache.value) {
         recordInputs.players[index] = playerCache.value;
         playerCache.value = undefined;
+    } else if (indexToSwapPlayer.value !== -1) {
+        const temp = recordInputs.players[index];
+        recordInputs.players[index] = recordInputs.players[indexToSwapPlayer.value];
+        recordInputs.players[indexToSwapPlayer.value] = temp;
+        indexToSwapPlayer.value = -1;
     }
 }
 
@@ -204,7 +211,7 @@ onMounted(() => {
                     'border-2 border-orange-300 hover:scale-[1.02] group cursor-pointer': isMovingOrSwapping && indexToSwapPlayer !== index,
                     'border-2 border-blue-500': indexToSwapPlayer === index,
                 }" @playerDragged="readyForSwapPlayer(index)" @playerDropped="swapPlayer" @update="clearError"
-                @click="handleSetPlayer(index)" />
+                @click="handleSetPlayer(index)" @clickedHandle="readyForSwapPlayer(index)" />
         </div>
         <button type="submit" class="h-16 w-80 rounded-2xl sm:mt-2 mt-8" :disabled="isSubmitting">
             <BaseButton class="h-16 w-80 p-4 flex items-center justify-center" :disabled="isSubmitting">
