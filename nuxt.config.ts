@@ -33,4 +33,17 @@ export default defineNuxtConfig({
             },
         },
     },
+    icon: {
+        clientBundle: {
+            icons: [
+                "stash:check-solid",
+                "stash:chevron-up-duotone",
+                "svg-spinners:180-ring-with-bg",
+                "stash:shield-user",
+                "stash:person",
+                "stash:burger-classic",
+            ],
+            scan: true,
+        },
+    },
 });
