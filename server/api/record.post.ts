@@ -11,6 +11,7 @@ const positionList: Position[] = [
 
 export default defineEventHandler(async (event) => {
     const body = await readBody<{
+        id?: number;
         gameType: GameType;
         players: string[];
         scores: number[];
@@ -18,7 +19,38 @@ export default defineEventHandler(async (event) => {
             id: number;
             points: number[];
         };
+        isToDelete?: boolean;
     }>(event);
+
+    const session = await getUserSession(event);
+    if (!session) {
+        return {
+            statusCode: 401,
+            message: "未登录",
+        };
+    }
+
+    // handle delete
+    if (body.id && body.isToDelete) {
+        if (session.user!.level !== UserLevel.admin) {
+            return {
+                statusCode: 403,
+                message: "无权限删除记录",
+            };
+        }
+        const record = await prisma.game.update({
+            where: {
+                id: body.id,
+            },
+            data: {
+                isValid: false,
+            },
+        });
+        return {
+            statusCode: 200,
+            message: "记录删除成功",
+        };
+    }
 
     // check players valid
     const players = await prisma.user.findMany({
@@ -36,13 +68,7 @@ export default defineEventHandler(async (event) => {
             )}不存在`,
         };
     }
-    const session = await getUserSession(event);
-    if (!session) {
-        return {
-            statusCode: 401,
-            message: "未登录",
-        };
-    } else if (
+    if (
         session.user!.level !== UserLevel.admin &&
         !players.find((p) => p.id === session.user!.id)
     ) {

@@ -7,6 +7,27 @@ const historyRecords = computed(() => {
         return [];
     }
 })
+
+async function handleRecordEdited(id: number, scores: number[]) {
+    await useFetch('/api/record', {
+        method: 'POST',
+        body: {
+            id,
+            scores,
+        }
+    });
+    refreshHistoryRecords();
+}
+async function handleRecordDeleted(id: number) {
+    await useFetch('/api/record', {
+        method: 'POST',
+        body: {
+            id,
+            isToDelete: true,
+        }
+    });
+    refreshHistoryRecords();
+}
 </script>
 
 <template>
@@ -22,9 +43,12 @@ const historyRecords = computed(() => {
                 <TransitionGroup name="record">
                     <RecordInputPanel key="recordPanel" canFold @uploaded="refreshHistoryRecords" />
                     <div class="flex flex-col w-full " key="historyPanel">
-                        <div class="block w-full sm:m-4 m-2 font-bold sm:text-3xl text-2xl text-gray-600 text-center sm:text-left">历史对局</div>
+                        <div
+                            class="block w-full sm:m-4 m-2 font-bold sm:text-3xl text-2xl text-gray-600 text-center sm:text-left">
+                            历史对局</div>
                         <div class="flex flex-col w-full sm:gap-6 gap-2 items-center">
-                            <Record v-for="record in historyRecords" :key="record.id" v-bind="record" />
+                            <Record v-for="record in historyRecords" :key="record.id" v-bind="record"
+                                @delete="handleRecordDeleted" @edit="handleRecordEdited" />
                         </div>
                     </div>
                 </TransitionGroup>
