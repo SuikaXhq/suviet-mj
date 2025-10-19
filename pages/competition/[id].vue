@@ -165,8 +165,7 @@ const rankOfCompetition = computed(() => {
                             <div class="font-bold">得点</div>
                             <div v-for="(item, index) in rankOfCompetition" :key="index" :class="Math.abs(item.point
                                 - 0) < 1e-3 ? `` : (item.point > 0 ? `text-red-700` : `text-green-700`)">{{
-                                    Math.abs(item.point
-                                        - 0) < 1e-3 ? '±' : (item.point > 0 ? '＋' : '▲') }}{{
+                                    Math.abs(item.point) < 1e-3 ? '±' : (item.point > 0 ? '＋' : '▲') }}{{
                                     Math.abs(item.point / 10).toFixed(1) }}</div>
                         </div>
                     </div>

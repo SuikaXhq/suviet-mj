@@ -31,12 +31,13 @@ function calculatePoints() {
 
 <template>
     <div class="flex flex-col w-full">
-        <div class="flex flex-row sm:px-4 items-center justify-between w-full sm:text-xl text-base text-gray-400">
+        <div class="flex flex-row sm:px-4 items-center justify-between w-full sm:text-2xl text-base text-gray-400">
             <div>{{ nameMap[gameType] }}</div>
         </div>
         <form class="sm:px-2 w-full flex flex-row items-center justify-center sm:gap-2 gap-1"
             @submit.prevent="$emit('submit', players, scores, points)">
-            <div class="sm:flex sm:flex-row grid grid-cols-2 grid-rows-2 flex-1 items-center justify-center sm:gap-2 gap-1">
+            <div
+                class="sm:flex sm:flex-row grid grid-cols-2 grid-rows-2 flex-1 items-center justify-center sm:gap-2 gap-1">
                 <div v-for="(player, index) in players" :key="index"
                     class="rounded-xl sm:p-2 px-2 py-1 flex-auto sm:h-28 h-20 flex flex-row items-center justify-center sm:gap-2 bg-gray-200">
                     <div class="flex flex-col items-center justify-center sm:gap-2 gap-1">

@@ -26,3 +26,5 @@ logs
 *.db
 *.crt
 *.key
+
+requirements.md
