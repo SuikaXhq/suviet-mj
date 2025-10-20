@@ -135,6 +135,30 @@ const rankOfCompetition = computed(() => {
     return result;
 })
 
+async function handleRecordDelete(id: number) {
+    await useFetch('/api/record', {
+        method: 'POST',
+        body: {
+            id,
+            isToDelete: true,
+        }
+    });
+    refresh();
+}
+
+async function handleRecordEdit(id: number, players: string[], scores: number[], callback: () => void) {
+    await useFetch('/api/record', {
+        method: 'POST',
+        body: {
+            id,
+            players,
+            scores,
+        }
+    });
+    await refresh();
+    callback();
+}
+
 </script>
 
 <template>
@@ -159,7 +183,7 @@ const rankOfCompetition = computed(() => {
                         <div class="flex flex-col gap-4 items-center">
                             <div class="font-bold">选手</div>
                             <div v-for="(item, index) in rankOfCompetition" :key="index" class="">{{ item.player
-                                }}</div>
+                            }}</div>
                         </div>
                         <div class="flex flex-col gap-4 items-center">
                             <div class="font-bold">得点</div>
@@ -173,8 +197,8 @@ const rankOfCompetition = computed(() => {
                 <div class="w-full flex flex-col gap-4 items-center pb-8">
                     <div class="text-red-700 text-xl">{{ errorInfo }}</div>
                     <template v-for="(item, index) in recordsWithForms" :key="index">
-                        <Record v-if="item.hasRecord" v-bind="item.record!" />
-                        <CompetitionRecordInput v-else-if="currentUser.level === UserLevel.admin"
+                        <Record v-if="item.hasRecord" v-bind="item.record!" canDelete @delete="handleRecordDelete"/>
+                        <CompetitionRecordInput v-else-if="currentUser!.level === UserLevel.admin"
                             :players="item.playerOrder!.slice(0, 4)" @submit="submitRecord" :isSubmitting />
                     </template>
                 </div>

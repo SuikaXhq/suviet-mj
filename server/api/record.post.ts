@@ -2,6 +2,7 @@ import { GameType, Position, UserLevel } from "@prisma/client";
 import prisma from "~/lib/prisma";
 import argsort from "#shared/utils/argsort";
 
+// 列表顺序与 Position 枚举定义顺序一致
 const positionList: Position[] = [
     Position.EAST,
     Position.SOUTH,

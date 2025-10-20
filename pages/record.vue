@@ -49,7 +49,7 @@ async function handleRecordDeleted(id: number) {
                             class="block w-full sm:m-4 m-2 font-bold sm:text-3xl text-2xl text-gray-600 text-center sm:text-left">
                             历史对局</div>
                         <div class="flex flex-col w-full sm:gap-6 gap-2 items-center">
-                            <Record v-for="record in historyRecords" :key="record.id" v-bind="record"
+                            <Record v-for="record in historyRecords" :key="record.id" v-bind="record" canDelete canEdit
                                 @delete="handleRecordDeleted" @edit="handleRecordEdited" />
                         </div>
                     </div>
