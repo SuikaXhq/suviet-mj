@@ -8,15 +8,17 @@ const historyRecords = computed(() => {
     }
 })
 
-async function handleRecordEdited(id: number, scores: number[]) {
+async function handleRecordEdited(id: number, players: string[], scores: number[], callback: () => void) {
     await useFetch('/api/record', {
         method: 'POST',
         body: {
             id,
+            players,
             scores,
         }
     });
-    refreshHistoryRecords();
+    await refreshHistoryRecords();
+    callback();
 }
 async function handleRecordDeleted(id: number) {
     await useFetch('/api/record', {

@@ -78,11 +78,43 @@ export default defineEventHandler(async (event) => {
         };
     }
 
-    // save record
+    // compute rank, tie-break by position
     const rank = argsort(
         body.scores.map((value, index) => value - (index + 1) / 10),
         true
     );
+
+    // handle edit
+    if (body.id && !body.isToDelete) {
+        if (session.user!.level !== UserLevel.admin) {
+            return {
+                statusCode: 403,
+                message: "无权限修改记录",
+            };
+        }
+        await Promise.all(
+            body.players.map((player, index) => {
+                return prisma.gameRecord.update({
+                    where: {
+                        gameId_playerId: {
+                            gameId: body.id!,
+                            playerId: players.find((p) => p.name === player)!.id,
+                        },
+                    },
+                    data: {
+                        score: body.scores[index],
+                        rank: rank.indexOf(index) + 1,
+                    },
+                });
+            })
+        );
+        return {
+            statusCode: 200,
+            message: "记录修改成功",
+        };
+    }
+
+    // save record
     const game = await prisma.game.create({
         data: {
             type: body.gameType,

@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'delete', id: number): void;
-    (e: 'edit', id: number, scores: number[]): void;
+    (e: 'edit', id: number, players: string[], scores: number[], callback: () => void): void;
 }>();
 
 const records = computed(() => {
@@ -31,11 +31,18 @@ const records = computed(() => {
 
 const editStatus = ref('')
 function confirmDelete() {
+    if (editStatus.value === 'delete') {
+        editStatus.value = '';
+        return;
+    };
     editStatus.value = 'delete';
 }
 const editingScores = reactive<{ [player: string]: number }>({});
 function startEditing() {
-    if (editStatus.value === 'edit') return;
+    if (editStatus.value === 'edit') {
+        editStatus.value = '';
+        return;
+    };
     editStatus.value = 'edit';
     records.value.forEach((item) => {
         editingScores[item.player] = item.score;
@@ -54,8 +61,12 @@ function submit() {
         emit('delete', props.id);
     } else if (editStatus.value === 'edit') {
         isSubmitting.value = true;
-        emit('edit', props.id, records.value.map(item => editingScores[item.player]));
+        emit('edit', props.id, props.players, props.players.map((player) => editingScores[player]), edited);
     }
+}
+function edited() {
+    editStatus.value = '';
+    isSubmitting.value = false;
 }
 
 const isEditing = computed(() => editStatus.value === 'edit');
@@ -106,7 +117,7 @@ const isDeleting = computed(() => editStatus.value === 'delete');
                 </div>
             </div>
         </div>
-        <TransitionGroup name="record" tag="div" class="flex flex-col my-1 sm:px-2">
+        <TransitionGroup name="confirm" tag="div" class="flex flex-col my-1 sm:px-2 transition-all">
             <div v-if="isDeleting" class="text-red-600 text-center">
                 确认删除该记录吗？
             </div>
@@ -114,7 +125,8 @@ const isDeleting = computed(() => editStatus.value === 'delete');
                 <button @click="submit()" class="flex-1" :disabled="isSubmitting">
                     <BaseButton class="h-14 sm:p-4 flex items-center justify-center" :disabled="isSubmitting">
                         <Icon v-if="!isSubmitting" name="stash:check-solid" size="2em" mode="svg" />
-                        <Icon v-else name="svg-spinners:180-ring-with-bg" size="1.5em" mode="svg" class="animate-spin" />
+                        <Icon v-else name="svg-spinners:180-ring-with-bg" size="1.5em" mode="svg"
+                            class="animate-spin" />
                     </BaseButton>
                 </button>
                 <button @click="cancel()" class="flex-1" :disabled="isSubmitting">
@@ -126,3 +138,19 @@ const isDeleting = computed(() => editStatus.value === 'delete');
         </TransitionGroup>
     </div>
 </template>
+
+<style>
+.confirm-move {
+    transition: transform 0.3s;
+}
+
+.confirm-leave-active,
+.confirm-enter-active {
+    transition: opacity 0.3s ease;
+}
+
+.confirm-enter-from,
+.confirm-leave-to {
+    opacity: 0;
+}
+</style>

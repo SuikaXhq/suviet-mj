@@ -37,6 +37,9 @@ export default defineNuxtConfig({
         clientBundle: {
             icons: [
                 "stash:check-solid",
+                "stash:times-duotone",
+                "material-symbols:edit-document",
+                "line-md:trash",
                 "stash:chevron-up-duotone",
                 "svg-spinners:180-ring-with-bg",
                 "stash:shield-user",
